@@ -3,15 +3,13 @@
 
 
 const routes = ["AB5", "BC4", "CD8", "DC8", "DE6",  "AD5", "CE2", "EB3", "AE7"];
-// input = 
+const shortRoundTripSettings = {
+    maxStops: 3,
+    maxDistance: 30,
+    target: 'C',
+}
+const shortRoundTripRoutes = ["CDC", "CEBC", "CEBCDC", "CDCEBC", "CDEBC", "CEBCEBC",  "CEBCEBCEBC"]
 
-
-
-// 1. The distance of the route A-B-C.  
-// 2. The distance of the route A-D.  
-// 3. The distance of the route A-D-C.  
-// 4. The distance of the route A-E-B-C-D.  
-// 5. The distance of the route A-E-D. 
 
 let routesObj = {};
 
@@ -42,10 +40,8 @@ const routeObject = loopInput(routes);
 const defaultRoutes = ["ABC", "AD","ADC","AEBCD","AED"];
 
 const findRoute = (start, end, next, distance) => {
-    console.log(start, end, next, distance, routeObject);
     if(routeObject[start] && routeObject[start][end]){
         distance += routeObject[start][end];
-        console.log(start, end, next, distance);
         if(next.length > 0){
             return findRoute(end, next.shift(), next, distance);
         } else {
@@ -53,7 +49,7 @@ const findRoute = (start, end, next, distance) => {
         }
     } else {
         
-        return 'NO SUCH ROUTE';
+        return `NO SUCH ROUTE [${start}${end}]`;
     }
 }
 
@@ -62,7 +58,8 @@ const perparedDistanceRequest = (routes) => {
     defaultRoutes.forEach((routeText)=>{
         if(typeof routeText === 'string'){
             const routeArr = routeText.split('');
-            output.push(findRoute(routeArr.shift(), routeArr.shift(), routeArr, 0))
+            let response = findRoute(routeArr.shift(), routeArr.shift(), routeArr, 0);
+            output.push(response)
         } else {
             output.push("INPUT WAS NOT A STRING")
         }
@@ -70,11 +67,28 @@ const perparedDistanceRequest = (routes) => {
     return output;
 }
 
-const response = perparedDistanceRequest(defaultRoutes);
+const findShortRoundTrips = (settings, inputData) => {
+    return inputData.reduce((accumulator, route, i) => {
+        const routeArr = route.split('');
+        if(routeArr.length <= settings.maxStops + 1){
+            const start = routeArr[0];
+            const end = routeArr[routeArr.length-1];
+            if(start === settings.target && end === settings.target){
+                const distance = findRoute(routeArr.shift(), routeArr.shift(), routeArr, 0);
+                if(distance <= settings.maxDistance){
+                    accumulator++;
+                }
+            }
+        }
+        return accumulator;
+    },0);
+}
 
-console.log('HI',response);
-if(response.length > 0){
-    response.forEach((route)=>{
-        console.log(route);
+const responses = perparedDistanceRequest(defaultRoutes);
+responses.push(findShortRoundTrips(shortRoundTripSettings, shortRoundTripRoutes));
+
+if(responses.length > 0){
+    responses.forEach((response, i)=>{
+        console.log(`OUTPUT #${i+1}: ` + response);
     })
 }
