@@ -8,5 +8,5 @@ const httpServer = express();
 new Router(httpServer);
 httpServer.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 httpServer.listen(port, () => {
-  console.log('also you can view swagger on http://localhost:3000/swagger');
+    console.log('also you can view swagger on http://localhost:3000/swagger');
 });
