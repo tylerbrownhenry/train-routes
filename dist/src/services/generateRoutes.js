@@ -26,8 +26,8 @@ const loopInput = (input) => {
     }
     return response;
 };
-const generateRoutes = () => {
-    return loopInput(routes_1.default);
+const generateRoutes = (input = routes_1.default) => {
+    return loopInput(input);
 };
 exports.default = generateRoutes;
 //# sourceMappingURL=generateRoutes.js.map

@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const specificTripSettings = {
-    exactly: 4,
     start: 'A',
     end: 'C',
     maxStops: 4,

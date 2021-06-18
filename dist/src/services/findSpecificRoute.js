@@ -18,7 +18,7 @@ const tripDiscovery = (Routes, stop, settings, count) => {
             return 0;
         }
     }
-    else {
+    else if (stop) {
         stop.getRoutes().forEach((route) => {
             resp += exports.tripDiscovery(Routes, Routes.getStop(route.name), settings, count + 1);
         });

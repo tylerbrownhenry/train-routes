@@ -32,6 +32,20 @@ const findSpecificRoute_1 = __importDefault(require("./services/findSpecificRout
 const Route = generateRoutes_1.default();
 const app_1 = __importDefault(require("./app"));
 app_1.default();
+const findRoutes = (routes) => {
+    if (routes && typeof routes === 'string') {
+        console.log('tes22t', routes);
+        try {
+            return generateRoutes_1.default(JSON.parse(routes.replace("List", "")));
+        }
+        catch (e) {
+            return;
+        }
+    }
+    else {
+        return generateRoutes_1.default(routes);
+    }
+};
 class Router {
     constructor(server) {
         const router = express.Router();
@@ -42,13 +56,19 @@ class Router {
         });
         router.get('/findShortestRoundTripRoute', cors_1.default(), (req, res) => {
             let result = {};
-            const stop = req.query.stop;
+            let { stop, routes } = req.query;
             if (stop) {
                 const settings = {
                     start: String(stop),
                     end: String(stop),
                 };
-                result = findShortestRoundTripRoute_1.default(Route, Route.getStop(settings.start), 0, settings, 0, Infinity, true, 0, []);
+                let route = findRoutes(routes);
+                if (route) {
+                    result = findShortestRoundTripRoute_1.default(route, route.getStop(settings.start), 0, settings, 0, Infinity, true, 0, []);
+                }
+                else {
+                    result = { error: true, message: 'Invalid routes provided' };
+                }
             }
             else {
                 result = { error: true, message: 'Missing required params' };
@@ -59,15 +79,34 @@ class Router {
         });
         router.get('/findShortRoundTrips', cors_1.default(), (req, res) => {
             let result = {};
-            const { maxStops, maxDistance, target } = req.query;
-            if (maxStops && maxDistance && target) {
+            let { maxStops, maxDistance, target, routes, trips, checkKey } = req.query;
+            if (target && checkKey) {
                 const settings = {
-                    maxStops: Number(maxStops),
-                    maxDistance: Number(maxDistance),
+                    trips,
+                    maxStops: maxStops ? Number(maxStops) : Infinity,
+                    maxDistance: maxDistance ? Number(maxDistance) : Infinity,
                     target: String(target),
-                    condition: (arr, settings) => arr.length <= settings.maxStops + 1
+                    checkKey: String(checkKey),
+                    condition: (arr, settings) => arr.length <= settings[settings.checkKey] + 1
                 };
-                result = findShortRoundTrips_1.default(Route, settings, shortRoundTripRoutes_1.default);
+                try {
+                    if (typeof trips === 'string') {
+                        trips = JSON.parse(trips.replace("List", ""));
+                    }
+                    else {
+                        trips = shortRoundTripRoutes_1.default;
+                    }
+                }
+                catch (e) {
+                    trips = shortRoundTripRoutes_1.default;
+                }
+                let route = findRoutes(routes);
+                if (route) {
+                    result = findShortRoundTrips_1.default(route, settings, trips);
+                }
+                else {
+                    result = { error: true, message: 'Invalid routes provided' };
+                }
             }
             else {
                 result = { error: true, message: 'Missing required params' };
@@ -78,15 +117,21 @@ class Router {
         });
         router.get('/findSpecificRoute', cors_1.default(), (req, res) => {
             let result = {};
-            const { exactly, end, maxStops, start } = req.query;
-            if (exactly && start && end && maxStops) {
+            let { end, maxStops, start, routes } = req.query;
+            if (start && end && maxStops) {
                 const settings = {
-                    exactly: Number(exactly),
                     start: String(start),
                     end: String(end),
-                    maxStops: Number(maxStops)
+                    maxStops: Number(maxStops),
                 };
-                result = findSpecificRoute_1.default(Route, settings);
+                let route = findRoutes(routes);
+                console.log('findRoutes', route, routes, typeof routes);
+                if (route) {
+                    result = findSpecificRoute_1.default(route, settings);
+                }
+                else {
+                    result = { error: true, message: 'Invalid routes provided' };
+                }
             }
             else {
                 result = { error: true, message: 'Missing required params' };

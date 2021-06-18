@@ -13,16 +13,28 @@
         "/findShortestRoundTripRoute": {
             "get": {
                 "summary": "finds the shortest round trip route for a stop",
-                "description": "",
+                "description": "Example #9: The length of the shortest route (in terms of distance to travel) from B to B",
                 "produces": [
                     "application/json"
                 ],
                 "parameters": [
                     {
                         "name": "stop",
+                        "descrition": "Stop want to make a round trip to",
+                        "default": "B",
                         "in": "query",
                         "required": false,
                         "type": "string"
+                    },
+                    {
+                        "name": "routes",
+                        "in": "query",
+                        "type": "array",
+                        "description": "Array of routes",
+                        "default": ["AB5", "BC4", "CD8", "DC8", "DE6", "AD5", "CE2", "EB3", "AE7"],
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "responses": {
@@ -35,28 +47,59 @@
         "/findShortRoundTrips": {
             "get": {
                 "summary": "finds the shortest round trip route for a stop",
-                "description": "",
+                "description": "Example #6 & #10: The number of trips starting at C and ending at C with a maximum of 3  stops. In the test input, there are two such trips: C-D-C (2 stops). and C-E-B-C  (3 stops). The number of different routes from C to C with a distance of less than 30.",
                 "produces": [
                     "application/json"
                 ],
                 "parameters": [
                     {
+                        "name": "checkKey",
+                        "in": "query",
+                        "description": "enter maxStops or maxDistance for which to be the limiting factor",
+                        "default": "maxStops",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
                         "name": "target",
                         "in": "query",
+                        "default": "C",
                         "required": false,
                         "type": "string"
                     },
                     {
                         "name": "maxStops",
+                        "default": "3",
                         "in": "query",
                         "required": false,
                         "type": "number"
                     },
                     {
                         "name": "maxDistance",
+                        "dafault": "30",
                         "in": "query",
                         "required": false,
                         "type": "number"
+                    },
+                    {
+                        "name": "trips",
+                        "in": "query",
+                        "type": "array",
+                        "description": "Array of routes",
+                        "default": ["CDC", "CEBC", "CEBCDC", "CDCEBC", "CDEBC", "CEBCEBC", "CEBCEBCEBC"],
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "routes",
+                        "in": "query",
+                        "type": "array",
+                        "description": "Array of routes",
+                        "default": ["AB5", "BC4", "CD8", "DC8", "DE6", "AD5", "CE2", "EB3", "AE7"],
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "responses": {
@@ -75,28 +118,37 @@
                 ],
                 "parameters": [
                     {
-                        "name": "exactly",
-                        "in": "query",
-                        "required": false,
-                        "type": "number"
-                    },
-                    {
                         "name": "start",
+                        "description": "Value of the last stop",
                         "in": "query",
+                        "default": "A",
                         "required": false,
                         "type": "string"
                     },
                     {
                         "name": "end",
+                        "description": "Value of the last stop",
                         "in": "query",
+                        "default": "C",
                         "required": false,
                         "type": "string"
                     },
                     {
                         "name": "maxStops",
+                        "description": "Exact number of stops to make",
                         "in": "query",
+                        "default": 4,
                         "required": false,
                         "type": "number"
+                    }, {
+                        "name": "routes",
+                        "in": "query",
+                        "type": "array",
+                        "description": "Array of routes",
+                        "default": ["AB5", "BC4", "CD8", "DC8", "DE6", "AD5", "CE2", "EB3", "AE7"],
+                        "items": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "responses": {
