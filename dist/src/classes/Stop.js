@@ -13,7 +13,7 @@ class Stop {
         this.routes.push(new Route_1.default(stop, distance));
     }
     getRoute(stop) {
-        return this.routes.find(routes => routes.name === stop);
+        return this.routes.find((routes) => routes.name === stop);
     }
     getRoutes() {
         return this.routes;

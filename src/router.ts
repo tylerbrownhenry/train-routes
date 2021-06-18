@@ -5,6 +5,8 @@ import findShortestRoundTripRoute from './services/findShortestRoundTripRoute';
 import findShortRoundTrips from './services/findShortRoundTrips';
 import shortRoundTripRoutes from './data/shortRoundTripRoutes';
 import findSpecificRoute from './services/findSpecificRoute';
+import findShortestRoute from './services/findShortestRoute';
+import perparedDistanceRequest from './services/perparedDistanceRequest';
 
 const Route = generateRoutes();
 
@@ -106,14 +108,60 @@ class Router {
             });
         });
 
-        router.get('/findSpecificRoute', cors(), (req: express.Request, res: express.Response) => {
+        router.get('/findShortestRoute', cors(), (req: express.Request, res: express.Response) => {
             let result = {};
-            let { end, maxStops, start, routes } = req.query;
-            if (start && end && maxStops) {
+            let { end, start, routes } = req.query;
+            if (start && end) {
                 const settings = {
                     start: String(start),
                     end: String(end),
-                    maxStops: Number(maxStops),
+                };
+
+                let route = findRoutes(routes);
+                if (route) {
+                    result = findShortestRoute(route, route.getStop(settings.start), 0, settings, 0, Infinity);
+                } else {
+                    result = { error: true, message: 'Invalid routes provided' };
+                }
+            } else {
+                result = { error: true, message: 'Missing required params' };
+            }
+            res.json({
+                result,
+            });
+        });
+
+        router.get('/findTripDistance', cors(), (req: express.Request, res: express.Response) => {
+            let result = {};
+            let { trip, routes } = req.query;
+            if (trip) {
+                const settings = {
+                    trip: String(trip),
+                };
+
+                let route = findRoutes(routes);
+                if (route) {
+                    result = perparedDistanceRequest(route, [trip]);
+                } else {
+                    result = { error: true, message: 'Invalid routes provided' };
+                }
+            } else {
+                result = { error: true, message: 'Missing required params' };
+            }
+            res.json({
+                result,
+            });
+        });
+
+
+        router.get('/findSpecificRoute', cors(), (req: express.Request, res: express.Response) => {
+            let result = {};
+            let { end, exactStops, start, routes } = req.query;
+            if (start && end && exactStops) {
+                const settings = {
+                    start: String(start),
+                    end: String(end),
+                    maxStops: Number(exactStops),
                 };
 
                 let route = findRoutes(routes);

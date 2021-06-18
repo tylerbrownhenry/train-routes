@@ -46,7 +46,7 @@
         },
         "/findShortRoundTrips": {
             "get": {
-                "summary": "finds the shortest round trip route for a stop",
+                "summary": "finds the shortest round trip route for a stop with a limiting factor",
                 "description": "Example #6 & #10: The number of trips starting at C and ending at C with a maximum of 3  stops. In the test input, there are two such trips: C-D-C (2 stops). and C-E-B-C  (3 stops). The number of different routes from C to C with a distance of less than 30.",
                 "produces": [
                     "application/json"
@@ -109,10 +109,51 @@
                 }
             }
         },
+        "/findShortestRoute": {
+            "get": {
+                "summary": "finds the shortest route between two points",
+                "description": "The length of the shortest route (in terms of distance to travel) from A to C.",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "start",
+                        "description": "Value of the last stop",
+                        "in": "query",
+                        "default": "A",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "end",
+                        "description": "Value of the last stop",
+                        "in": "query",
+                        "default": "C",
+                        "required": false,
+                        "type": "string"
+                    }, {
+                        "name": "routes",
+                        "in": "query",
+                        "type": "array",
+                        "description": "Array of routes",
+                        "default": ["AB5", "BC4", "CD8", "DC8", "DE6", "AD5", "CE2", "EB3", "AE7"],
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "successful operation"
+                    }
+                }
+            }
+        },
         "/findSpecificRoute": {
             "get": {
                 "summary": "finds the shortest round trip route for a stop",
-                "description": "",
+                "description": "Example #7: The number of trips starting at A and ending at C with exactly 4 stops. In the  test input, there are three such trips: A to C (via B,C,D); A to C (via D,C,D); and  A to C (via D,E,B).  ",
                 "produces": [
                     "application/json"
                 ],
@@ -134,12 +175,45 @@
                         "type": "string"
                     },
                     {
-                        "name": "maxStops",
+                        "name": "exactStops",
                         "description": "Exact number of stops to make",
                         "in": "query",
                         "default": 4,
                         "required": false,
                         "type": "number"
+                    }, {
+                        "name": "routes",
+                        "in": "query",
+                        "type": "array",
+                        "description": "Array of routes",
+                        "default": ["AB5", "BC4", "CD8", "DC8", "DE6", "AD5", "CE2", "EB3", "AE7"],
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "successful operation"
+                    }
+                }
+            }
+        },
+        "/findTripDistance": {
+            "get": {
+                "summary": "finds the shortest round trip route for a stop",
+                "description": "Example #1-5: Find distance of the route A-B-C.",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "trip",
+                        "description": "trip to measure distance of",
+                        "in": "query",
+                        "default": "ABC",
+                        "required": false,
+                        "type": "string"
                     }, {
                         "name": "routes",
                         "in": "query",

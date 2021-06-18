@@ -14,7 +14,9 @@ const findShortestRoundTripRoute = (Routes, stop, distanceToStop, settings, dist
         }
         else {
             // Keep looking for the end
-            Routes.getStop(stop.name).getRoutes().forEach((route) => {
+            Routes.getStop(stop.name)
+                .getRoutes()
+                .forEach((route) => {
                 queue.push({ route, distance: distanceToHere });
             });
             const next = queue.pop();

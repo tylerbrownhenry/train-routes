@@ -4,7 +4,7 @@ const pathUnderAmountSettings = {
     maxStops: Infinity,
     maxDistance: 30,
     target: 'C',
-    condition: (arr, settings) => arr.length <= settings.maxDistance
+    condition: (arr, settings) => arr.length <= settings.maxDistance,
 };
 exports.default = pathUnderAmountSettings;
 //# sourceMappingURL=pathUnderAmountSettings.js.map

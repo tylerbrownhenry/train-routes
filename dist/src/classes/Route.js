@@ -14,7 +14,7 @@ class Route {
         return this.distance;
     }
     getStop(name) {
-        return this.stops.find(stop => stop.name === name);
+        return this.stops.find((stop) => stop.name === name);
     }
     addStopRoute(start, end, distance) {
         let stop = this.getStop(start);

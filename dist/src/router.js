@@ -29,6 +29,8 @@ const findShortestRoundTripRoute_1 = __importDefault(require("./services/findSho
 const findShortRoundTrips_1 = __importDefault(require("./services/findShortRoundTrips"));
 const shortRoundTripRoutes_1 = __importDefault(require("./data/shortRoundTripRoutes"));
 const findSpecificRoute_1 = __importDefault(require("./services/findSpecificRoute"));
+const findShortestRoute_1 = __importDefault(require("./services/findShortestRoute"));
+const perparedDistanceRequest_1 = __importDefault(require("./services/perparedDistanceRequest"));
 const Route = generateRoutes_1.default();
 const app_1 = __importDefault(require("./app"));
 app_1.default();
@@ -36,7 +38,7 @@ const findRoutes = (routes) => {
     if (routes && typeof routes === 'string') {
         console.log('tes22t', routes);
         try {
-            return generateRoutes_1.default(JSON.parse(routes.replace("List", "")));
+            return generateRoutes_1.default(JSON.parse(routes.replace('List', '')));
         }
         catch (e) {
             return;
@@ -51,7 +53,7 @@ class Router {
         const router = express.Router();
         router.get('/', (req, res) => {
             res.json({
-                message: `try http://localhost:3000/swagger/#/default/get_findShortestRoundTripRoute`
+                message: `try http://localhost:3000/swagger/#/default/get_findShortestRoundTripRoute`,
             });
         });
         router.get('/findShortestRoundTripRoute', cors_1.default(), (req, res) => {
@@ -87,11 +89,11 @@ class Router {
                     maxDistance: maxDistance ? Number(maxDistance) : Infinity,
                     target: String(target),
                     checkKey: String(checkKey),
-                    condition: (arr, settings) => arr.length <= settings[settings.checkKey] + 1
+                    condition: (arr, settings) => arr.length <= settings[settings.checkKey] + 1,
                 };
                 try {
                     if (typeof trips === 'string') {
-                        trips = JSON.parse(trips.replace("List", ""));
+                        trips = JSON.parse(trips.replace('List', ''));
                     }
                     else {
                         trips = shortRoundTripRoutes_1.default;
@@ -115,17 +117,61 @@ class Router {
                 result,
             });
         });
-        router.get('/findSpecificRoute', cors_1.default(), (req, res) => {
+        router.get('/findShortestRoute', cors_1.default(), (req, res) => {
             let result = {};
-            let { end, maxStops, start, routes } = req.query;
-            if (start && end && maxStops) {
+            let { end, start, routes } = req.query;
+            if (start && end) {
                 const settings = {
                     start: String(start),
                     end: String(end),
-                    maxStops: Number(maxStops),
                 };
                 let route = findRoutes(routes);
-                console.log('findRoutes', route, routes, typeof routes);
+                if (route) {
+                    result = findShortestRoute_1.default(route, route.getStop(settings.start), 0, settings, 0, Infinity);
+                }
+                else {
+                    result = { error: true, message: 'Invalid routes provided' };
+                }
+            }
+            else {
+                result = { error: true, message: 'Missing required params' };
+            }
+            res.json({
+                result,
+            });
+        });
+        router.get('/findTripDistance', cors_1.default(), (req, res) => {
+            let result = {};
+            let { trip, routes } = req.query;
+            if (trip) {
+                const settings = {
+                    trip: String(trip),
+                };
+                let route = findRoutes(routes);
+                if (route) {
+                    result = perparedDistanceRequest_1.default(route, [trip]);
+                }
+                else {
+                    result = { error: true, message: 'Invalid routes provided' };
+                }
+            }
+            else {
+                result = { error: true, message: 'Missing required params' };
+            }
+            res.json({
+                result,
+            });
+        });
+        router.get('/findSpecificRoute', cors_1.default(), (req, res) => {
+            let result = {};
+            let { end, exactStops, start, routes } = req.query;
+            if (start && end && exactStops) {
+                const settings = {
+                    start: String(start),
+                    end: String(end),
+                    maxStops: Number(exactStops),
+                };
+                let route = findRoutes(routes);
                 if (route) {
                     result = findSpecificRoute_1.default(route, settings);
                 }

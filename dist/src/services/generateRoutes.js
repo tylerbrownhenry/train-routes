@@ -19,7 +19,7 @@ const loopInput = (input) => {
     // loop through input
     let response = new Route_1.default('parent');
     if (input && Array.isArray(input)) {
-        input.forEach((route) => response = parseInput(route, response));
+        input.forEach((route) => (response = parseInput(route, response)));
     }
     else {
         console.log('NO INPUT WAS PROVIDED');

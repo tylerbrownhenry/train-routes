@@ -13,7 +13,7 @@ const perparedDistanceRequest = (Routes, defaultRoutes) => {
             output.push(response);
         }
         else {
-            output.push("INPUT WAS NOT A STRING");
+            output.push('INPUT WAS NOT A STRING');
         }
     });
     return output;
