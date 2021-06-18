@@ -6,3 +6,15 @@ cd train-routes
 npm install
 npm run build && npm run start
 ```
+Can view swagger on http://localhost:3000/swagger/
+
+## Project structure
+
+```
+/dist   <- compiled JavaScript code goes here
+/src    <- TypeScript source code lives here
+```
+
+## License
+
+[MIT](./LICENSE)
