@@ -130,7 +130,6 @@ class Router {
           };
 
           let route = findRoutes(routes);
-          console.log('findRoutes', route, routes, typeof routes);
           if (route) {
             result = findSpecificRoute(route, settings);
           } else {
