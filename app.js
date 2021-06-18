@@ -6,6 +6,7 @@ const shortRoundTripSettings = {
     maxStops: 3,
     maxDistance: 30,
     target: 'C',
+    condition: (arr, settings) => arr.length <= settings.maxStops + 1
 };
 
 const specificTripSettings = {
@@ -15,7 +16,7 @@ const specificTripSettings = {
     maxStops: 4,
 };
 
-const shortetsRouteTripSettings = {
+const shortestRouteTripSettings = {
     start: 'A',
     end: 'C',
 };
@@ -24,6 +25,13 @@ const shortetsRouteRoundTripSettings = {
     start: 'B',
     end: 'B',
 };
+
+const pathUnderAmountSettings = {
+    maxStops: Infinity,
+    maxDistance: 30,
+    target: 'C',
+    condition: (arr, settings) => arr.length <= settings.maxDistance
+}
 
 class Stop {
     constructor(name) {
@@ -89,8 +97,6 @@ const loopInput = (input)=> {
     return response;
 }
 
-const Routes = loopInput(routes);
-
 const findRoute = (start, end, next, distance) => {
     const startStop = Routes.getStop(start);
     const endStop = startStop.getRoute(end);
@@ -102,7 +108,7 @@ const findRoute = (start, end, next, distance) => {
             return distance;
         }
     } else {  
-        return `NO SUCH ROUTE [${start}${end}]`;
+        return `NO SUCH ROUTE`;
     }
 }
 
@@ -123,9 +129,9 @@ const perparedDistanceRequest = (defaultRoutes) => {
 const findShortRoundTrips = (settings, inputData) => {
     return inputData.reduce((accumulator, route, i) => {
         const routeArr = route.split('');
-        if(routeArr.length <= settings.maxStops + 1){
+        if(settings.condition(routeArr, settings)){
             const start = routeArr[0];
-            const end = routeArr[routeArr.length-1];
+            const end = routeArr[routeArr.length - 1];
             if(start === settings.target && end === settings.target){
                 const distance = findRoute(routeArr.shift(), routeArr.shift(), routeArr, 0);
                 if(distance <= settings.maxDistance){
@@ -208,21 +214,14 @@ const findSpecificRoute = (settings, Route) => {
     return tripDiscovery(stop, settings, 0, 0); // this is excessive
 }
 
+const Routes = loopInput(routes);
+
 const responses = perparedDistanceRequest(defaultRoutes);
 responses.push(findShortRoundTrips(shortRoundTripSettings, shortRoundTripRoutes));
 responses.push(findSpecificRoute(specificTripSettings, Routes));
-responses.push(findShortestRoute(Routes.getStop(shortetsRouteTripSettings.start), 0, shortetsRouteTripSettings, 0, Infinity));
+responses.push(findShortestRoute(Routes.getStop(shortestRouteTripSettings.start), 0, shortestRouteTripSettings, 0, Infinity));
 responses.push(findShortestRoundTripRoute(Routes.getStop(shortetsRouteRoundTripSettings.start), 0, shortetsRouteRoundTripSettings, 0, Infinity, true, 0, []));
-
-
-
-
-10. The number of different routes from C to C with a distance of less than 30
-
-// 9. The length of the shortest route (in terms of distance to travel) from B to B.
-
-// 8. The length of the shortest route (in terms of distance to travel) from A to C.
-
+responses.push(findShortRoundTrips(pathUnderAmountSettings, shortRoundTripRoutes));
 
 if(responses.length > 0){
     responses.forEach((response, i)=>{
