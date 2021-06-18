@@ -10,13 +10,11 @@
       "rootDir": "./",
       "strict": true
     },
-    // "files": [
-    //   "./node_modules/@types/node/index.d.ts"
-    // ],
     "include": [
       "src/**/*.ts"
-    ],
+, "app.ts"    ],
     "exclude": [
+        "./test",
       "node_modules"
     ]
  

@@ -15,6 +15,12 @@ Can view swagger on http://localhost:3000/swagger/
 /src    <- TypeScript source code lives here
 ```
 
+## Running Tests 
+```shell
+npm run test
+```
+
+
 ## License
 
 [MIT](./LICENSE)
