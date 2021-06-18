@@ -1,5 +1,8 @@
+## Project setup
 
-npm i
+```shell
+git clone https://github.com/tylerbrownhenry/train-routes.git
+cd train-routes
+npm install
 npm run build && npm run start
-
-can view swagger on http://localhost:3000/swagger/
+```

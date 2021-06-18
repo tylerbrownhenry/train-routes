@@ -42,10 +42,11 @@ class Router {
         });
         router.get('/findShortestRoundTripRoute', cors_1.default(), (req, res) => {
             let result = {};
-            if (req.query.stop) {
+            const stop = req.query.stop;
+            if (stop) {
                 const settings = {
-                    start: String(req.query.stop),
-                    end: String(req.query.stop),
+                    start: String(stop),
+                    end: String(stop),
                 };
                 result = findShortestRoundTripRoute_1.default(Route, Route.getStop(settings.start), 0, settings, 0, Infinity, true, 0, []);
             }
@@ -58,11 +59,12 @@ class Router {
         });
         router.get('/findShortRoundTrips', cors_1.default(), (req, res) => {
             let result = {};
-            if (req.query.maxStops && req.query.maxDistance && req.query.target) {
+            const { maxStops, maxDistance, target } = req.query;
+            if (maxStops && maxDistance && target) {
                 const settings = {
-                    maxStops: Number(req.query.maxStops),
-                    maxDistance: Number(req.query.maxDistance),
-                    target: String(req.query.target),
+                    maxStops: Number(maxStops),
+                    maxDistance: Number(maxDistance),
+                    target: String(target),
                     condition: (arr, settings) => arr.length <= settings.maxStops + 1
                 };
                 result = findShortRoundTrips_1.default(Route, settings, shortRoundTripRoutes_1.default);
@@ -76,12 +78,13 @@ class Router {
         });
         router.get('/findSpecificRoute', cors_1.default(), (req, res) => {
             let result = {};
-            if (req.query.exactly && req.query.start && req.query.end && req.query.maxStops) {
+            const { exactly, end, maxStops, start } = req.query;
+            if (exactly && start && end && maxStops) {
                 const settings = {
-                    exactly: Number(req.query.exactly),
-                    start: String(req.query.start),
-                    end: String(req.query.end),
-                    maxStops: Number(req.query.exactly)
+                    exactly: Number(exactly),
+                    start: String(start),
+                    end: String(end),
+                    maxStops: Number(maxStops)
                 };
                 result = findSpecificRoute_1.default(Route, settings);
             }
