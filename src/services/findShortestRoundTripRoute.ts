@@ -13,6 +13,9 @@ const findShortestRoundTripRoute = (
 ) => {
     if (distanceToHere > 1000) {
         // Error out if trying too hard
+        // Note: I remembered I left this here, but would have liked to handle it differently, I added it temporarily
+        // to fix it from throwing a stack overflow error, but really should just track the results of each iteration
+        // will leave as is for now, but wanted to point it out
         return shortestDistance;
     }
 
